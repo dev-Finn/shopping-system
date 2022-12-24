@@ -1,6 +1,31 @@
-var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
+using MassTransit;
+using Ordering.Service.Options;
+using Ordering.Service.Sagas;
 
-app.MapGet("/", () => "Hello World!");
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddMassTransit(massTransit =>
+{
+    var conf = new MassTransitOptions();
+    builder.Configuration.GetSection("MassTransit").Bind(conf);
+
+    massTransit.UsingRabbitMq((context, rbmq) =>
+    {
+        rbmq.Host(conf.RabbitMq.Host, conf.RabbitMq.VirtualHost, host =>
+        {
+            host.Username(conf.RabbitMq.Username);
+            host.Password(conf.RabbitMq.Password);
+        });
+        rbmq.ConfigureEndpoints(context);
+    });
+
+    massTransit.AddSagaStateMachine<OrderStateMachine, OrderState>().MartenRepository(builder.Configuration.GetConnectionString("Marten"), conf =>
+    {
+        conf.Schema.For<OrderState>()
+            .UseOptimisticConcurrency(true);
+    });
+});
+
+var app = builder.Build();
 
 app.Run();
