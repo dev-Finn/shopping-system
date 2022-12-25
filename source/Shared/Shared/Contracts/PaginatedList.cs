@@ -1,4 +1,4 @@
-﻿namespace Shared.Contract;
+﻿namespace Shared.Contracts;
 
 public sealed class PaginatedList<T> : List<T>
 {

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Shared.Contract;
+namespace Shared.Contracts;
 
 public abstract class PagedResponse<T>
 {
