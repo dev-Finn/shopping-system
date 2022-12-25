@@ -41,10 +41,8 @@ public sealed class ProductRepository : IProductRepository
         _context.Products.Update(product);
     }
 
-    public Task<Product> GetProduct(Guid productId, CancellationToken ct = default)
-    {
-        return FindProduct(productId, ct);
-    }
+    public Task<Product> GetProduct(Guid productId, CancellationToken ct = default) => FindProduct(productId, ct);
+
     private async Task<Product> FindProduct(Guid productId, CancellationToken ct)
     {
         Product? product = await _context.Products.FindAsync(new object?[] { productId }, ct);
