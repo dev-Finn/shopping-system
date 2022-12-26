@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{60E543
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "source\Shared\Shared\Shared.csproj", "{F903A8E5-7E52-41E4-9AEF-A3E2AC78C856}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ordering.Contracts", "source\Ordering\Ordering.Contracts\Ordering.Contracts.csproj", "{9D0F844C-5664-48A2-951F-645EA0D93BB0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,7 @@ Global
 		{49E313C2-9A39-4345-B576-BFA3B4F92A31} = {0576926E-7E03-47A9-A8C6-5F5E6DE303F2}
 		{60E5432B-D2F0-47E9-83FE-3C8689DA9350} = {EBD1AF48-DECB-4684-B064-D47209577386}
 		{F903A8E5-7E52-41E4-9AEF-A3E2AC78C856} = {60E5432B-D2F0-47E9-83FE-3C8689DA9350}
+		{9D0F844C-5664-48A2-951F-645EA0D93BB0} = {0576926E-7E03-47A9-A8C6-5F5E6DE303F2}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{49E313C2-9A39-4345-B576-BFA3B4F92A31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -43,5 +46,9 @@ Global
 		{F903A8E5-7E52-41E4-9AEF-A3E2AC78C856}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F903A8E5-7E52-41E4-9AEF-A3E2AC78C856}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F903A8E5-7E52-41E4-9AEF-A3E2AC78C856}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D0F844C-5664-48A2-951F-645EA0D93BB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D0F844C-5664-48A2-951F-645EA0D93BB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D0F844C-5664-48A2-951F-645EA0D93BB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D0F844C-5664-48A2-951F-645EA0D93BB0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

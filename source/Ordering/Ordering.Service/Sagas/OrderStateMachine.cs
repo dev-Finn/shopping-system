@@ -3,7 +3,6 @@ using Ordering.Contracts.Commands;
 using Ordering.Contracts.Events;
 using Ordering.Contracts.Models;
 
-
 namespace Ordering.Service.Sagas;
 
 public sealed class OrderState : SagaStateMachineInstance
@@ -37,12 +36,6 @@ public sealed class OrderStateMachine : MassTransitStateMachine<OrderState>
         Event(() => PaymentProcessed, correlation => correlation.CorrelateById(context => context.Message.OrderId));
         Event(() => OrderShipped, correlation => correlation.CorrelateById(context => context.Message.OrderId));
         Event(() => OrderCanceled, correlation => correlation.CorrelateById(context => context.Message.OrderId));
-    }
-
-    private void UpdateSagaState(OrderState state, Order order)
-    {
-        state.Order = order;
-        state.Updated = DateTime.UtcNow;
     }
 
 
