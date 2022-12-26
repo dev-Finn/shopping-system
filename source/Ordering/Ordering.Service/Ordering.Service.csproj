@@ -21,5 +21,9 @@
         <DependentUpon>appsettings.json</DependentUpon>
       </Content>
     </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\Ordering.Contracts\Ordering.Contracts.csproj" />
+    </ItemGroup>
 
 </Project>

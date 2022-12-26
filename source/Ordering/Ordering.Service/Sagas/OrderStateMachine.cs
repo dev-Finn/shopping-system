@@ -1,9 +1,8 @@
 ﻿using MassTransit;
-using Ordering.Service.Contracts.Commands.Incomming;
-using Ordering.Service.Contracts.Commands.Outgoing;
-using Ordering.Service.Contracts.Events.Incomming;
-using Ordering.Service.Contracts.Events.Outgoing;
-using Ordering.Service.Models;
+using Ordering.Contracts.Commands;
+using Ordering.Contracts.Events;
+using Ordering.Contracts.Models;
+
 
 namespace Ordering.Service.Sagas;
 
@@ -11,8 +10,9 @@ public sealed class OrderState : SagaStateMachineInstance
 {
     public Guid CorrelationId { get; set; }
     public string CurrentState { get; set; }
-
-    public IReadOnlyCollection<Position> Positions { get; set; } = new List<Position>();
+    public Order Order { get; set; }
+    public DateTime Created { get; set; }
+    public DateTime Updated { get; set; }
 }
 
 public sealed class OrderStateMachine : MassTransitStateMachine<OrderState>
@@ -20,39 +20,63 @@ public sealed class OrderStateMachine : MassTransitStateMachine<OrderState>
     public OrderStateMachine()
     {
         InstanceState(x => x.CurrentState);
-        Event(() => Create, correlation => correlation.SelectId(context => context.CorrelationId ?? NewId.NextGuid()));
-        Event(() => Pay, correlation => correlation.CorrelateById(context => context.Message.OrderId));
-        Event(() => Ship, correlation => correlation.CorrelateById(context => context.Message.OrderId));
-        Event(() => Cancel, correlation => correlation.CorrelateById(context => context.Message.OrderId));
+        SetupCorrelation();
 
-        Initially(
-            When(Create)
-                .Then(x => x.Saga.Positions = x.Message.Positions)
-                .PublishAsync(context =>
-                    context.Init<OrderCreatedEvent>(new { OrderId = context.Saga.CorrelationId, context.Saga.Positions, TimestampUtc = DateTime.UtcNow }))
-                .TransitionTo(Pending));
+        Initially(SetOrderSubmittedHandler());
 
-        During(Pending,
-            When(Pay)
-                .SendAsync(context => context.Init<ShipOrderCommand>(new { OrderId = context.Saga.CorrelationId }))
-                .TransitionTo(Paid));
+        During(Processing, SetStockReservedHandler(), SetPaymentProcessedHandler(), SetOrderShippedHandler());
 
-        During(Paid, When(Ship).TransitionTo(Shipped).Finalize());
+        During(Processing, When(OrderCanceled).TransitionTo(Cancelled).Finalize());
 
-        DuringAny(
-            When(Cancel)
-                .PublishAsync(context => context.Init<OrderCancelledEvent>(new { OrderId = context.Saga.CorrelationId, TimestampUtc = DateTime.UtcNow }))
-                .TransitionTo(Cancelled)
-                .Finalize());
+        SetCompletedWhenFinalized();
     }
 
-    public Event<CreateOrderCommand> Create { get; private set; }
-    public Event<CancelOrderCommand> Cancel { get; private set; }
-    public Event<OrderPaidEvent> Pay { get; private set; }
-    public Event<OrderShippedEvent> Ship { get; private set; }
+    private void SetupCorrelation()
+    {
+        Event(() => OrderSubmitted, correlation => correlation.CorrelateById(context => context.Message.OrderId));
+        Event(() => PaymentProcessed, correlation => correlation.CorrelateById(context => context.Message.OrderId));
+        Event(() => OrderShipped, correlation => correlation.CorrelateById(context => context.Message.OrderId));
+        Event(() => OrderCanceled, correlation => correlation.CorrelateById(context => context.Message.OrderId));
+    }
 
-    public State Pending { get; private set; }
-    public State Paid { get; private set; }
-    public State Shipped { get; private set; }
+    private void UpdateSagaState(OrderState state, Order order)
+    {
+        state.Order = order;
+        state.Updated = DateTime.UtcNow;
+    }
+
+
+    private EventActivityBinder<OrderState, OrderSubmitted> SetOrderSubmittedHandler() =>
+        When(OrderSubmitted)
+            .Then(x => x.Saga.Created = DateTime.UtcNow)
+            .Then(x => x.Saga.Updated = DateTime.UtcNow)
+            .Send(c => new ReserveStock(c.Saga.Order))
+            .TransitionTo(Processing);
+
+    private EventActivityBinder<OrderState, StockReserved> SetStockReservedHandler() =>
+        When(StockReserved)
+            .Then(x => x.Saga.Updated = DateTime.UtcNow)
+            .Then(c => new ProcessPayment(c.Saga.Order));
+
+    private EventActivityBinder<OrderState, PaymentProcessed> SetPaymentProcessedHandler() =>
+        When(PaymentProcessed)
+            .Then(x => x.Saga.Updated = DateTime.UtcNow)
+            .Send(c => new ShipOrder(c.Saga.Order));
+
+    private EventActivityBinder<OrderState, OrderShipped> SetOrderShippedHandler() =>
+        When(OrderShipped)
+            .Then(x => x.Saga.Updated = DateTime.UtcNow)
+            .Publish(c => new OrderProcessed(c.Saga.Order.OrderId))
+            .TransitionTo(Processed)
+            .Finalize();
+
+    public Event<OrderSubmitted> OrderSubmitted { get; private set; }
+    public Event<OrderCancelled> OrderCanceled { get; private set; }
+    public Event<StockReserved> StockReserved { get; private set; }
+    public Event<PaymentProcessed> PaymentProcessed { get; private set; }
+    public Event<OrderShipped> OrderShipped { get; private set; }
+
+    public State Processing { get; private set; }
+    public State Processed { get; private set; }
     public State Cancelled { get; private set; }
 }

@@ -19,11 +19,13 @@ builder.Services.AddMassTransit(massTransit =>
         rbmq.ConfigureEndpoints(context);
     });
 
-    massTransit.AddSagaStateMachine<OrderStateMachine, OrderState>().MartenRepository(builder.Configuration.GetConnectionString("Marten"), conf =>
-    {
-        conf.Schema.For<OrderState>()
-            .UseOptimisticConcurrency(true);
-    });
+    massTransit
+        .AddSagaStateMachine<OrderStateMachine, OrderState>()
+        .MartenRepository(builder.Configuration.GetConnectionString("Marten"), store =>
+        {
+            store.Schema.For<OrderState>()
+                .UseOptimisticConcurrency(true);
+        });
 });
 
 var app = builder.Build();

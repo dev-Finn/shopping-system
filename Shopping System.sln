@@ -16,6 +16,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ordering", "Ordering", "{05
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ordering.Service", "source\Ordering\Ordering.Service\Ordering.Service.csproj", "{49E313C2-9A39-4345-B576-BFA3B4F92A31}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ordering", "Ordering", "{18AD9603-843E-4338-BA8E-D50BE0FCE76E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ordering.Contracts", "source\Ordering\Ordering.Contracts\Ordering.Contracts.csproj", "{5005775A-4DF3-47B2-A198-0317586ED72A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,11 +31,17 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{0576926E-7E03-47A9-A8C6-5F5E6DE303F2} = {EBD1AF48-DECB-4684-B064-D47209577386}
 		{49E313C2-9A39-4345-B576-BFA3B4F92A31} = {0576926E-7E03-47A9-A8C6-5F5E6DE303F2}
+		{18AD9603-843E-4338-BA8E-D50BE0FCE76E} = {595E90B0-D407-47C9-826F-25B92891A757}
+		{5005775A-4DF3-47B2-A198-0317586ED72A} = {0576926E-7E03-47A9-A8C6-5F5E6DE303F2}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{49E313C2-9A39-4345-B576-BFA3B4F92A31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{49E313C2-9A39-4345-B576-BFA3B4F92A31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49E313C2-9A39-4345-B576-BFA3B4F92A31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49E313C2-9A39-4345-B576-BFA3B4F92A31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5005775A-4DF3-47B2-A198-0317586ED72A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5005775A-4DF3-47B2-A198-0317586ED72A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5005775A-4DF3-47B2-A198-0317586ED72A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5005775A-4DF3-47B2-A198-0317586ED72A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
