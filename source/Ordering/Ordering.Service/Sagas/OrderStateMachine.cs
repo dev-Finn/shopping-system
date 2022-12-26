@@ -25,7 +25,7 @@ public sealed class OrderStateMachine : MassTransitStateMachine<OrderState>
 
         During(Processing, SetStockReservedHandler(), SetPaymentProcessedHandler(), SetOrderShippedHandler());
 
-        During(Processing, When(OrderCanceled).TransitionTo(Cancelled).Finalize());
+        During(Processing, SetOrderCancelledHandler());
 
         SetCompletedWhenFinalized();
     }
@@ -37,7 +37,6 @@ public sealed class OrderStateMachine : MassTransitStateMachine<OrderState>
         Event(() => OrderShipped, correlation => correlation.CorrelateById(context => context.Message.OrderId));
         Event(() => OrderCanceled, correlation => correlation.CorrelateById(context => context.Message.OrderId));
     }
-
 
     private EventActivityBinder<OrderState, OrderSubmitted> SetOrderSubmittedHandler() =>
         When(OrderSubmitted)
@@ -61,6 +60,13 @@ public sealed class OrderStateMachine : MassTransitStateMachine<OrderState>
             .Then(x => x.Saga.Updated = DateTime.UtcNow)
             .Publish(c => new OrderProcessed(c.Saga.Order.OrderId))
             .TransitionTo(Processed)
+            .Finalize();
+
+    private EventActivityBinder<OrderState, OrderCancelled> SetOrderCancelledHandler() =>
+        When(OrderCanceled)
+            .Then(x => x.Saga.Updated = DateTime.UtcNow)
+            .Publish(c => new OrderCancelled(c.Saga.Order.OrderId))
+            .TransitionTo(Cancelled)
             .Finalize();
 
     public Event<OrderSubmitted> OrderSubmitted { get; private set; }
