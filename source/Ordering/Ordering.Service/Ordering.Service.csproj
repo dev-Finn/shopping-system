@@ -11,6 +11,8 @@
         <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
         <PackageReference Include="MassTransit.Marten" Version="8.0.9" />
         <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.9" />
+        <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     </ItemGroup>
     
     <ItemGroup>
@@ -23,6 +25,8 @@
     </ItemGroup>
     
     <ItemGroup>
+      <ProjectReference Include="..\..\Payment\Payment.Contracts\Payment.Contracts.csproj" />
+      <ProjectReference Include="..\..\Warehouse\Warehouse.Contracts\Warehouse.Contracts.csproj" />
       <ProjectReference Include="..\Ordering.Contracts\Ordering.Contracts.csproj" />
     </ItemGroup>
 

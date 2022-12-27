@@ -1,0 +1,38 @@
+volumes:
+  rabbitmq_data:
+  postgres_data:
+
+services:
+  rabbit:
+    container_name: rabbit
+    image: rabbitmq:3-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=developer
+      - RABBITMQ_DEFAULT_PASS=developer
+    ports:
+      - "5672:5672"
+      - "8090:15672"
+
+  postgres:
+    container_name: postgres
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=developmentpassword
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - "postgres_data:/var/lib/postgresql/data"
+    ports:
+      - "5432:5432"
+
+  ordering-service:
+    container_name: ordering
+    image: shopping-system/ordering
+    build:
+      context: source
+      dockerfile: Ordering/Ordering.Service/Dockerfile
+    depends_on:
+      - rabbit
+      - postgres
+    ports:
+      - "8080:80"
+      - "8443:443"

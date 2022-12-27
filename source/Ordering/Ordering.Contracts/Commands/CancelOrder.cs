@@ -1,3 +1,6 @@
-﻿namespace Ordering.Contracts.Commands;
+﻿using MassTransit;
 
-public sealed record CancelOrderCommand(Guid OrderId);
+namespace Ordering.Contracts.Commands;
+
+[EntityName("cancel-order")]
+public sealed record CancelOrder(Guid OrderId);

@@ -22,6 +22,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "source\Shared\Sha
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ordering.Contracts", "source\Ordering\Ordering.Contracts\Ordering.Contracts.csproj", "{9D0F844C-5664-48A2-951F-645EA0D93BB0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Payment", "Payment", "{55683091-744E-44C0-B81E-9B124011FCEB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Warehouse", "Warehouse", "{E36BF0A2-61D5-4F37-9667-8D755D9034BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Payment.Contracts", "source\Payment\Payment.Contracts\Payment.Contracts.csproj", "{D13C5214-25F0-4EDC-8922-A4FE675CD799}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Warehouse.Contracts", "source\Warehouse\Warehouse.Contracts\Warehouse.Contracts.csproj", "{B000BBA5-FC75-4C1B-B948-D0994CC625CB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{A5B43F97-5373-4059-89F0-24CDCC545C35}"
+	ProjectSection(SolutionItems) = preProject
+		docs\Command and Event Ownership.png = docs\Command and Event Ownership.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +49,10 @@ Global
 		{60E5432B-D2F0-47E9-83FE-3C8689DA9350} = {EBD1AF48-DECB-4684-B064-D47209577386}
 		{F903A8E5-7E52-41E4-9AEF-A3E2AC78C856} = {60E5432B-D2F0-47E9-83FE-3C8689DA9350}
 		{9D0F844C-5664-48A2-951F-645EA0D93BB0} = {0576926E-7E03-47A9-A8C6-5F5E6DE303F2}
+		{55683091-744E-44C0-B81E-9B124011FCEB} = {EBD1AF48-DECB-4684-B064-D47209577386}
+		{E36BF0A2-61D5-4F37-9667-8D755D9034BC} = {EBD1AF48-DECB-4684-B064-D47209577386}
+		{D13C5214-25F0-4EDC-8922-A4FE675CD799} = {55683091-744E-44C0-B81E-9B124011FCEB}
+		{B000BBA5-FC75-4C1B-B948-D0994CC625CB} = {E36BF0A2-61D5-4F37-9667-8D755D9034BC}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{49E313C2-9A39-4345-B576-BFA3B4F92A31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -50,5 +67,13 @@ Global
 		{9D0F844C-5664-48A2-951F-645EA0D93BB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D0F844C-5664-48A2-951F-645EA0D93BB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D0F844C-5664-48A2-951F-645EA0D93BB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D13C5214-25F0-4EDC-8922-A4FE675CD799}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D13C5214-25F0-4EDC-8922-A4FE675CD799}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D13C5214-25F0-4EDC-8922-A4FE675CD799}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D13C5214-25F0-4EDC-8922-A4FE675CD799}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B000BBA5-FC75-4C1B-B948-D0994CC625CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B000BBA5-FC75-4C1B-B948-D0994CC625CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B000BBA5-FC75-4C1B-B948-D0994CC625CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B000BBA5-FC75-4C1B-B948-D0994CC625CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

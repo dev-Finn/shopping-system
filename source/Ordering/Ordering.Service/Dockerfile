@@ -5,10 +5,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["source/Ordering/Ordering.Service/Ordering.Service.csproj", "source/Ordering/Ordering.Service/"]
-RUN dotnet restore "source/Ordering/Ordering.Service/Ordering.Service.csproj"
-COPY . .
-WORKDIR "/src/source/Ordering/Ordering.Service"
+
+# Copy Source
+COPY ["Ordering/Ordering.Service/", "Ordering/Ordering.Service/"]
+
+# Copy Contracts
+COPY ["Ordering/Ordering.Contracts/", "Ordering/Ordering.Contracts/"]
+COPY ["Payment/Payment.Contracts/", "Payment/Payment.Contracts/"]
+COPY ["Warehouse/Warehouse.Contracts/", "Warehouse/Warehouse.Contracts/"]
+
+WORKDIR "/src/Ordering/Ordering.Service"
 RUN dotnet build "Ordering.Service.csproj" -c Release -o /app/build
 
 FROM build AS publish

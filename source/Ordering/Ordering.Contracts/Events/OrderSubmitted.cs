@@ -1,3 +1,7 @@
-﻿namespace Ordering.Contracts.Events;
+﻿using MassTransit;
+using Ordering.Contracts.Models;
 
-public sealed record OrderSubmitted(Guid OrderId);
+namespace Ordering.Contracts.Events;
+
+[EntityName("order-submitted")]
+public sealed record OrderSubmitted(Order Order);
