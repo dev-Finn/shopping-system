@@ -22,7 +22,7 @@ public sealed class CatalogServiceExceptionMiddleware
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Something went wrong: {ex}");
+            _logger.LogError(ex, "Something went wrong");
             await HandleExceptionAsync(httpContext, ex);
         }
     }
@@ -33,9 +33,14 @@ public sealed class CatalogServiceExceptionMiddleware
         context.Response.StatusCode = exception switch
         {
             ProductNotFoundException productNotFoundException => (int) HttpStatusCode.NotFound,
+            CommitFailedException commitFailedException => (int) HttpStatusCode.InternalServerError,
             _ => (int) HttpStatusCode.InternalServerError
         };
+        #if DEBUG
+        await context.Response.WriteAsync(new ErrorDetails(context.Response.StatusCode, exception.Message + Environment.NewLine + exception.InnerException?.Message + Environment.NewLine + exception.InnerException?.InnerException?.Message).ToString());
+        #else
         await context.Response.WriteAsync(new ErrorDetails(context.Response.StatusCode, exception.Message).ToString());
+        #endif
     }
 }
 

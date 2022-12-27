@@ -1,5 +1,5 @@
 using Catalog.Service.Domain.Repositories;
-using Catalog.Service.Features.Products;
+using Catalog.Service.Endpoints.Products;
 using Catalog.Service.Infrastructure;
 using Catalog.Service.Infrastructure.Repositories;
 using Catalog.Service.Infrastructure.SieveProcessors;

@@ -22,6 +22,6 @@ public sealed class GetProductQueryHandler : IRequestHandler<GetProductQuery, Pr
     public async Task<ProductDto> Handle(GetProductQuery query, CancellationToken ct)
     {
         Product product = await _repository.GetProduct(query.ProductId, ct);
-        return product.AsDto();
+        return Product.AsDto(product);
     }
 }

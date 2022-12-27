@@ -26,12 +26,12 @@ public sealed class Product
     
     public static Product Create(string name, string description, decimal price)
     {
-        if (string.IsNullOrWhiteSpace(name))
+        if (string.IsNullOrWhiteSpace(name) || name.Length is < 5 or > 64)
         {
             throw new ArgumentException("Name can not be null or whitespace.", nameof(name));
         }
         
-        if (string.IsNullOrWhiteSpace(description))
+        if (string.IsNullOrWhiteSpace(description) || description.Length is < 5 or > 512)
         {
             throw new ArgumentException("Description can not be null or whitespace.", nameof(description));
         }
@@ -76,5 +76,6 @@ public sealed class Product
         DeletedAt = DateTime.UtcNow;
     }
 
-    public ProductDto AsDto() => new(Id, Name, Description, Price, DeletedAt);
+    public static ProductDto AsDto(Product product)
+        => new(product.Id, product.Name, product.Description, product.Price, product.DeletedAt);
 }

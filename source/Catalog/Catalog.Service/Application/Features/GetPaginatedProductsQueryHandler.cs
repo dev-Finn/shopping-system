@@ -2,9 +2,9 @@
 using Catalog.Service.Application.Dtos;
 using Catalog.Service.Domain.Models;
 using Catalog.Service.Domain.Repositories;
-using Catalog.Service.Helpers;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Shared.Contracts;
 using Sieve.Models;
 using Sieve.Services;
 
@@ -33,7 +33,7 @@ public sealed class GetPaginatedProductsQueryHandler : IRequestHandler<GetPagina
         int totalCount = await totalCountQueryable.CountAsync(ct);
         IQueryable<Product>? paginatedQueryable = _sieveProcessor.Apply(query.SieveModel, queryable);
         List<Product> list = await paginatedQueryable.ToListAsync(ct);
-        List<ProductDto> listDto = list.Select(product =>product.AsDto()).ToList();
+        List<ProductDto> listDto = list.Select(Product.AsDto).ToList();
         Debug.Assert(query.SieveModel.PageSize != null, "query.SieveModel.PageSize != null");
         return new PaginatedList<ProductDto>(listDto, totalCount, query.SieveModel.Page!.Value,
             query.SieveModel.PageSize.Value);

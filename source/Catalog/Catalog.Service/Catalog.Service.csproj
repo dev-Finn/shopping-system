@@ -35,4 +35,8 @@
       <Folder Include="Infrastructure\Migrations" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\Shared\Shared\Shared.csproj" />
+    </ItemGroup>
+
 </Project>

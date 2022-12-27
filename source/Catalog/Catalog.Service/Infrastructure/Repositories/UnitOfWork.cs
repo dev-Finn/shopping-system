@@ -1,4 +1,5 @@
 ﻿using Catalog.Service.Domain.Repositories;
+using Catalog.Service.Exceptions;
 
 namespace Catalog.Service.Infrastructure.Repositories;
 
@@ -23,6 +24,14 @@ public sealed class UnitOfWork : IUnitOfWork
 
     public async Task CommitChanges(CancellationToken ct)
     {
-        await _context.SaveChangesAsync(ct);
+        try
+        {
+            await _context.SaveChangesAsync(ct);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to commit changes");
+            throw new CommitFailedException("Failed to commit changes", ex);
+        }
     }
 }

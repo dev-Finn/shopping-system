@@ -6,7 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace Catalog.Service.Features.Products;
+namespace Catalog.Service.Endpoints.Products;
 
 public sealed record CreateProductRequest(string Name, string Description , decimal Price);
 
@@ -32,13 +32,11 @@ public sealed class CreateProductRequestValidator : AbstractValidator<CreateProd
 public sealed class CreateProductEndpoint : EndpointBaseAsync.WithRequest<CreateProductRequest>.WithActionResult
 {
     private readonly ISender _sender;
-    private readonly ILogger<CreateProductEndpoint> _logger;
     private readonly IValidator<CreateProductRequest> _validator;
 
-    public CreateProductEndpoint(ISender sender, ILogger<CreateProductEndpoint> logger, IValidator<CreateProductRequest> validator)
+    public CreateProductEndpoint(ISender sender, IValidator<CreateProductRequest> validator)
     {
         _sender = sender;
-        _logger = logger;
         _validator = validator;
     }
     
@@ -51,7 +49,7 @@ public sealed class CreateProductEndpoint : EndpointBaseAsync.WithRequest<Create
         Description = "Creates a Product",
         OperationId = "Product.Create",
         Tags = new[] {"Products"})]
-    public override async Task<ActionResult> HandleAsync(CreateProductRequest request, CancellationToken cancellationToken = default)
+    public override async Task<ActionResult> HandleAsync([FromBody] CreateProductRequest request, CancellationToken cancellationToken = default)
     {
         ValidationResult? validationResult = await _validator.ValidateAsync(request, cancellationToken);
         if (!validationResult.IsValid)
