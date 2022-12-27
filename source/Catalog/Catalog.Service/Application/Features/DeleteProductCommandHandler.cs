@@ -8,12 +8,10 @@ public sealed record DeleteProductCommand(Guid ProductId) : IRequest<Unit>;
 public sealed class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, Unit>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly ILogger<DeleteProductCommandHandler> _logger;
 
-    public DeleteProductCommandHandler(IUnitOfWork unitOfWork, ILogger<DeleteProductCommandHandler> logger)
+    public DeleteProductCommandHandler(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
-        _logger = logger;
     }
 
     public async Task<Unit> Handle(DeleteProductCommand command, CancellationToken ct)

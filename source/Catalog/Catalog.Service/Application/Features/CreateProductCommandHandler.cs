@@ -8,12 +8,10 @@ public sealed record CreateProductCommand(string Name, string Description, decim
 public sealed class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, Guid>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly ILogger<CreateProductCommandHandler> _logger;
 
-    public CreateProductCommandHandler(IUnitOfWork unitOfWork, ILogger<CreateProductCommandHandler> logger)
+    public CreateProductCommandHandler(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
-        _logger = logger;
     }
     
     public async Task<Guid> Handle(CreateProductCommand command, CancellationToken ct)

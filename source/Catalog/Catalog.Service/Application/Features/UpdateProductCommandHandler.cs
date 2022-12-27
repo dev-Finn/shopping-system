@@ -10,12 +10,10 @@ public sealed record UpdateProductCommand
 public sealed class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, Unit>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly ILogger<UpdateProductCommandHandler> _logger;
 
-    public UpdateProductCommandHandler(IUnitOfWork unitOfWork, ILogger<UpdateProductCommandHandler> logger)
+    public UpdateProductCommandHandler(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
-        _logger = logger;
     }
 
     public async Task<Unit> Handle(UpdateProductCommand command, CancellationToken ct)

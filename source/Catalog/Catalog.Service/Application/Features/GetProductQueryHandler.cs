@@ -11,12 +11,10 @@ public sealed record GetProductQuery(Guid ProductId)
 public sealed class GetProductQueryHandler : IRequestHandler<GetProductQuery, ProductDto>
 {
     private readonly IProductRepository _repository;
-    private readonly ILogger<GetProductQueryHandler> _logger;
 
-    public GetProductQueryHandler(IProductRepository repository, ILogger<GetProductQueryHandler> logger)
+    public GetProductQueryHandler(IProductRepository repository)
     {
         _repository = repository;
-        _logger = logger;
     }
 
     public async Task<ProductDto> Handle(GetProductQuery query, CancellationToken ct)

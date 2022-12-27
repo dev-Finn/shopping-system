@@ -17,13 +17,11 @@ public sealed class GetPaginatedProductsQueryHandler : IRequestHandler<GetPagina
 {
     private readonly ISieveProcessor _sieveProcessor;
     private readonly IProductRepository _repository;
-    private readonly ILogger<GetPaginatedProductsQueryHandler> _logger;
 
-    public GetPaginatedProductsQueryHandler(ISieveProcessor sieveProcessor, IProductRepository repository, ILogger<GetPaginatedProductsQueryHandler> logger)
+    public GetPaginatedProductsQueryHandler(ISieveProcessor sieveProcessor, IProductRepository repository)
     {
         _sieveProcessor = sieveProcessor;
         _repository = repository;
-        _logger = logger;
     }
 
     public async Task<PaginatedList<ProductDto>> Handle(GetPaginatedProductsQuery query, CancellationToken ct)
