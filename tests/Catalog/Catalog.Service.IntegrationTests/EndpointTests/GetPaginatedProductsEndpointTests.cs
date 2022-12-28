@@ -19,16 +19,6 @@ public sealed class GetPaginatedProductsEndpointTests : IClassFixture<CatalogApi
             faker.Finance.Amount(1m, 10m, 4)));
 
     private readonly Product[] _products;
-
-    private readonly SieveModel _validSieveModel = new(1, 100);
-    
-    private readonly SieveModel _notValidSieveModel = new Faker<SieveModel>()
-        .CustomInstantiator(faker =>
-            new SieveModel(
-                faker.Random.Int(-100, 0),
-                faker.Random.Int(-100, 0)))
-        .Generate();
-
     public GetPaginatedProductsEndpointTests(CatalogApiFactory apiFactory)
     {
         _apiFactory = apiFactory;
@@ -40,12 +30,12 @@ public sealed class GetPaginatedProductsEndpointTests : IClassFixture<CatalogApi
     public async Task GetPaginated_ReturnsOKWithPaginatedProductsResponse_WhenRequestIsValid()
     {
         await _apiFactory.InsertProductsForEndpointTesting(_products);
-        ApiResponse<GetPaginatedProductsResponse> response = await _client.GetPaginatedProducts(_validSieveModel);
+        ApiResponse<GetPaginatedProductsResponse> response = await _client.GetPaginatedProducts(1, 100);
         response.Should().NotBeNull();
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         response.Content.Should().NotBeNull();
-        response.Content?.CurrentPage.Should().Be(_validSieveModel.Page);
-        response.Content?.PageSize.Should().Be(_validSieveModel.PageSize);
+        response.Content?.CurrentPage.Should().Be(1);
+        response.Content?.PageSize.Should().Be(100);
         response.Content?.HasNext.Should().BeFalse();
         response.Content?.Data.Should().NotBeEmpty();
         response.Content?.Data.Should().BeEquivalentTo(_products.Select(Product.AsDto));
@@ -54,7 +44,7 @@ public sealed class GetPaginatedProductsEndpointTests : IClassFixture<CatalogApi
     [Fact]
     public async Task GetPaginated_ReturnsBadRequest_WhenRequestIsNotValid()
     {
-        ApiResponse<GetPaginatedProductsResponse> response = await _client.GetPaginatedProducts(_notValidSieveModel);
+        ApiResponse<GetPaginatedProductsResponse> response = await _client.GetPaginatedProducts(-1, -99);
         response.Should().NotBeNull();
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }

@@ -1,5 +1,5 @@
 ﻿using Ardalis.ApiEndpoints;
-using Catalog.Service.Application.Dtos;
+using Catalog.Service.Application.Contracts;
 using Catalog.Service.Application.Features;
 using FluentValidation;
 using FluentValidation.Results;
@@ -11,9 +11,9 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace Catalog.Service.Endpoints.Products;
 
-public sealed class GetPaginatedProductsResponse : PagedResponse<ProductDto>
+public sealed class GetPaginatedProductsResponse : PagedResponse<ProductListItem>
 {
-    public GetPaginatedProductsResponse(PaginatedList<ProductDto> data) : base(data)
+    public GetPaginatedProductsResponse(PaginatedList<ProductListItem> data) : base(data)
     {
     }   
 }
@@ -38,7 +38,7 @@ public sealed class GetPaginatedProductsEndpoint : EndpointBaseAsync.WithRequest
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public override async Task<GetPaginatedProductsResponse> HandleAsync([FromQuery] SieveModel sieveModel, CancellationToken ct = default)
     {
-        PaginatedList<ProductDto> paginatedList = await _sender.Send(new GetPaginatedProductsQuery(sieveModel), ct);
+        PaginatedList<ProductListItem> paginatedList = await _sender.Send(new GetPaginatedProductsQuery(sieveModel), ct);
 
         return new GetPaginatedProductsResponse(paginatedList);
     }

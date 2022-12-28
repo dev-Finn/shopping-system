@@ -12,7 +12,7 @@ public sealed class UpdateProductEndpointTests : IClassFixture<CatalogApiFactory
     private readonly CatalogApiFactory _apiFactory;
     private readonly ICatalogClient _client;
 
-    private readonly Product _persistedProduct = new Faker<Product>()
+    private readonly Product _existingProduct = new Faker<Product>()
         .CustomInstantiator(faker =>
             Product.Create(
                 faker.Random.String2(5, 64),
@@ -36,8 +36,8 @@ public sealed class UpdateProductEndpointTests : IClassFixture<CatalogApiFactory
     [Fact]
     public async Task UpdateProduct_ReturnsOk_WhenRequestIsValid()
     {
-        await _apiFactory.InsertProductsForEndpointTesting(_persistedProduct);
-        IApiResponse response = await _client.UpdateProduct(_persistedProduct.Id, _validRequest);
+        await _apiFactory.InsertProductsForEndpointTesting(_existingProduct);
+        IApiResponse response = await _client.UpdateProduct(_existingProduct.Id, _validRequest);
         response.Should().NotBeNull();
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }

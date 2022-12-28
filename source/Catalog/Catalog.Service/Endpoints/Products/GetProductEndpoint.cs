@@ -1,5 +1,5 @@
 ﻿using Ardalis.ApiEndpoints;
-using Catalog.Service.Application.Dtos;
+using Catalog.Service.Application.Contracts;
 using Catalog.Service.Application.Features;
 using FluentValidation;
 using FluentValidation.Results;
@@ -37,7 +37,7 @@ public sealed class GetProductEndpoint : EndpointBaseAsync.WithRequest<GetProduc
         Description = "Get a Product",
         OperationId = "Product.Get",
         Tags = new[] {"Products"})]
-    [Produces(typeof(ProductDto))]
+    [Produces(typeof(ProductDetail))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -50,7 +50,7 @@ public sealed class GetProductEndpoint : EndpointBaseAsync.WithRequest<GetProduc
             return;
         }
 
-        ProductDto dto = await _sender.Send(new GetProductQuery(request.ProductId), ct);
+        ProductDetail dto = await _sender.Send(new GetProductQuery(request.ProductId), ct);
 
         await Results.Ok(dto).ExecuteAsync(HttpContext);
     }

@@ -1,4 +1,4 @@
-﻿using Catalog.Service.Application.Dtos;
+﻿using Catalog.Service.Application.Contracts;
 using Catalog.Service.Domain.Models;
 using Catalog.Service.Domain.Repositories;
 using MediatR;
@@ -6,9 +6,9 @@ using MediatR;
 namespace Catalog.Service.Application.Features;
 
 public sealed record GetProductQuery(Guid ProductId)
-    : IRequest<ProductDto>;
+    : IRequest<ProductDetail>;
 
-public sealed class GetProductQueryHandler : IRequestHandler<GetProductQuery, ProductDto>
+public sealed class GetProductQueryHandler : IRequestHandler<GetProductQuery, ProductDetail>
 {
     private readonly IProductRepository _repository;
 
@@ -17,7 +17,7 @@ public sealed class GetProductQueryHandler : IRequestHandler<GetProductQuery, Pr
         _repository = repository;
     }
 
-    public async Task<ProductDto> Handle(GetProductQuery query, CancellationToken ct)
+    public async Task<ProductDetail> Handle(GetProductQuery query, CancellationToken ct)
     {
         Product product = await _repository.GetProduct(query.ProductId, ct);
         return Product.AsDto(product);

@@ -5,7 +5,6 @@ namespace Catalog.Service.IntegrationTests.Clients;
 
 public sealed record CreateProductRequest(string Name, string Description , decimal Price);
 public sealed record UpdateProductRequest(string Name, string Description, decimal Price);
-public sealed record SieveModel(int Page, int PageSize);
 public sealed class ProductDto
 {
     [JsonProperty(propertyName: "id")]
@@ -55,7 +54,7 @@ public interface ICatalogClient
     Task<IApiResponse> UpdateProduct(Guid productId, [Body] UpdateProductRequest request);
     
     [Get("/products")]
-    Task<ApiResponse<GetPaginatedProductsResponse>> GetPaginatedProducts(SieveModel request);
+    Task<ApiResponse<GetPaginatedProductsResponse>> GetPaginatedProducts(int page, int pageSize, string sorts = "", string filters = "");
     
     [Get("/products/{productId}")]
     Task<ApiResponse<ProductDto>> GetProduct(Guid productId);

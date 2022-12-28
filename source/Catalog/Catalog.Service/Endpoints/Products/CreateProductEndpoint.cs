@@ -49,16 +49,15 @@ public sealed class CreateProductEndpoint : EndpointBaseAsync.WithRequest<Create
         Description = "Creates a Product",
         OperationId = "Product.Create",
         Tags = new[] {"Products"})]
-    public override async Task<ActionResult> HandleAsync([FromBody] CreateProductRequest request, CancellationToken cancellationToken = default)
+    public override async Task<ActionResult> HandleAsync([FromBody] CreateProductRequest request, CancellationToken ct = default)
     {
-        ValidationResult? validationResult = await _validator.ValidateAsync(request, cancellationToken);
+        ValidationResult? validationResult = await _validator.ValidateAsync(request, ct);
         if (!validationResult.IsValid)
         {
             return BadRequest(validationResult.ToDictionary());
         }
 
-        Guid id =await _sender.Send(new CreateProductCommand(request.Name, request.Description, request.Price),
-            cancellationToken);
+        Guid id = await _sender.Send(new CreateProductCommand(request.Name, request.Description, request.Price), ct);
 
         return Created("", id);
     }

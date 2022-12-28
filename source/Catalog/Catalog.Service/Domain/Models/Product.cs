@@ -1,4 +1,4 @@
-﻿using Catalog.Service.Application.Dtos;
+﻿using Catalog.Service.Application.Contracts;
 
 namespace Catalog.Service.Domain.Models;
 
@@ -76,6 +76,9 @@ public sealed class Product
         DeletedAt = DateTime.UtcNow;
     }
 
-    public static ProductDto AsDto(Product product)
+    public static ProductListItem AsListItem(Product product)
+        => new(product.Id, product.Name, product.Description, product.Price, product.DeletedAt);
+    
+    public static ProductDetail AsDto(Product product)
         => new(product.Id, product.Name, product.Description, product.Price, product.DeletedAt);
 }

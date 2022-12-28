@@ -12,7 +12,7 @@ public sealed class DeleteProductEndpointTests : IClassFixture<CatalogApiFactory
     private readonly CatalogApiFactory _apiFactory;
     private readonly ICatalogClient _client;
 
-    private readonly Product _persistedProduct = new Faker<Product>()
+    private readonly Product _existingProduct = new Faker<Product>()
         .CustomInstantiator(faker =>
             Product.Create(
                 faker.Random.String2(5, 64),
@@ -28,8 +28,8 @@ public sealed class DeleteProductEndpointTests : IClassFixture<CatalogApiFactory
     [Fact]
     public async Task DeleteProduct_ReturnsOk_WhenRequestIsValid()
     {
-        await _apiFactory.InsertProductsForEndpointTesting(_persistedProduct);
-        IApiResponse response = await _client.DeleteProduct(_persistedProduct.Id);
+        await _apiFactory.InsertProductsForEndpointTesting(_existingProduct);
+        IApiResponse response = await _client.DeleteProduct(_existingProduct.Id);
         response.Should().NotBeNull();
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
