@@ -16,7 +16,7 @@ using Serilog;
 
 namespace Catalog.Service.IntegrationTests;
 
-public sealed class CatalogApiFactory : WebApplicationFactory<ICatalogService>, IAsyncLifetime
+public sealed class CatalogApiFactory : WebApplicationFactory<ICatalogAssemblyMarker>, IAsyncLifetime
 {
     public ILogger Logger { get; set; }
 
@@ -41,9 +41,9 @@ public sealed class CatalogApiFactory : WebApplicationFactory<ICatalogService>, 
         builder.ConfigureLogging(c => c.AddSerilog(Logger));
         builder.ConfigureTestServices(services =>
         {
-            services.RemoveAll(typeof(ServiceContext));
-            services.RemoveAll<DbContextOptions<ServiceContext>>();
-            services.AddDbContext<ServiceContext>(options =>
+            services.RemoveAll(typeof(CatalogContext));
+            services.RemoveAll<DbContextOptions<CatalogContext>>();
+            services.AddDbContext<CatalogContext>(options =>
             {
                 options.UseNpgsql(_dbContainer.ConnectionString);
             });
@@ -56,7 +56,7 @@ public sealed class CatalogApiFactory : WebApplicationFactory<ICatalogService>, 
     public async Task InsertProductsForEndpointTesting(params Product[] products)
     {
         await using AsyncServiceScope scope = Services.CreateAsyncScope();
-        ServiceContext context = scope.ServiceProvider.GetRequiredService<ServiceContext>();
+        CatalogContext context = scope.ServiceProvider.GetRequiredService<CatalogContext>();
         await context.Products.AddRangeAsync(products);
         await context.SaveChangesAsync();
     }
@@ -65,7 +65,7 @@ public sealed class CatalogApiFactory : WebApplicationFactory<ICatalogService>, 
     {
         await _dbContainer.StartAsync();
         await using var asyncScope = Services.CreateAsyncScope();
-        ServiceContext context = asyncScope.ServiceProvider.GetRequiredService<ServiceContext>();
+        CatalogContext context = asyncScope.ServiceProvider.GetRequiredService<CatalogContext>();
         await context.Database.EnsureCreatedAsync();
     }
 

@@ -23,7 +23,7 @@ builder.Host.UseSerilog((context, configuration) =>
 });
 
 builder.Services.AddMediatR(typeof(Program).Assembly);
-builder.Services.AddDbContext<ServiceContext>(options =>
+builder.Services.AddDbContext<CatalogContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("CatalogDb"));
 });
@@ -39,9 +39,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers();
 
 WebApplication app = builder.Build();
+app.UseSerilogRequestLogging();
 app.UseMiddleware<CatalogServiceExceptionMiddleware>();
 app.UseRouting();
-app.UseSerilogRequestLogging();
 app.UseSwagger();
 app.UseSwaggerUI();
 app.MapControllers();

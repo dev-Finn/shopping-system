@@ -7,10 +7,10 @@ namespace Catalog.Service.Infrastructure.Repositories;
 
 public sealed class ProductRepository : IProductRepository
 {
-    private readonly ServiceContext _context;
+    private readonly CatalogContext _context;
     public DbSet<Product> Products { get; }
 
-    public ProductRepository(ServiceContext context)
+    public ProductRepository(CatalogContext context)
     {
         _context = context;
         Products = context.Set<Product>();
