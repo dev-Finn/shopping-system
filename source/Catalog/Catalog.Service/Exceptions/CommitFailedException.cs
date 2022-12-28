@@ -13,4 +13,12 @@ public class CommitFailedException : Exception
     {
         
     }
+    
+    public CommitFailedProblemDetails AsProblemDetails() => new();
+}
+
+public sealed class CommitFailedProblemDetails : ICatalogProblemDetails
+{
+    public int StatusCode => 500;
+    public string ContentType => "application/json";
 }

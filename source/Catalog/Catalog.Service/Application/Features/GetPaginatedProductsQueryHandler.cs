@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Catalog.Service.Application.Contracts;
+﻿using Catalog.Service.Application.Contracts;
 using Catalog.Service.Domain.Models;
 using Catalog.Service.Domain.Repositories;
 using MediatR;

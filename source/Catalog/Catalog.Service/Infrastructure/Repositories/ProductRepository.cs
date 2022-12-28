@@ -49,7 +49,7 @@ public sealed class ProductRepository : IProductRepository
 
         if (product is null)
         {
-            throw new ProductNotFoundException($"Product with Id: {productId} not found!");
+            throw new ProductNotFoundException(productId, $"Product with Id: {productId} not found!");
         }
 
         return product;

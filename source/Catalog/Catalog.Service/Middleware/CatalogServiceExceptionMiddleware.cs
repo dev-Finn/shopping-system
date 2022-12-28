@@ -1,5 +1,7 @@
 ﻿using System.Net;
 using Catalog.Service.Exceptions;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Catalog.Service.Middleware;
 
@@ -29,33 +31,34 @@ public sealed class CatalogServiceExceptionMiddleware
     
     private async Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
-        context.Response.ContentType = "application/text";
-        context.Response.StatusCode = exception switch
+        ICatalogProblemDetails problemDetails = exception switch
         {
-            ProductNotFoundException productNotFoundException => (int) HttpStatusCode.NotFound,
-            CommitFailedException commitFailedException => (int) HttpStatusCode.InternalServerError,
-            _ => (int) HttpStatusCode.InternalServerError
+            ProductNotFoundException productNotFoundException => productNotFoundException.AsProblemDetails(),
+            PleaseRetryAgainException pleaseRetryAgainException => pleaseRetryAgainException.AsProblemDetails(),
+            CommitFailedException commitFailedException => commitFailedException.AsProblemDetails(),
+            _ => new UnexpectedDetail(context.Request.QueryString.Value)
         };
-        #if DEBUG
-        await context.Response.WriteAsync(new ErrorDetails(context.Response.StatusCode, exception.Message + Environment.NewLine + exception.InnerException?.Message + Environment.NewLine + exception.InnerException?.InnerException?.Message).ToString());
-        #else
-        await context.Response.WriteAsync(new ErrorDetails(context.Response.StatusCode, exception.Message).ToString());
-        #endif
+        
+        context.Response.ContentType = problemDetails.ContentType;
+        context.Response.StatusCode = problemDetails.StatusCode;
+
+        await context.Response.WriteAsJsonAsync(problemDetails);
     }
 }
 
-public sealed class ErrorDetails
+public sealed class UnexpectedDetail : ProblemDetails, ICatalogProblemDetails
 {
-    private const string ERRORDETAIL_RESPONSE = "Responded with StatusCode: {0} with Message: {1}";
-    public int StatusCode { get; }
-    public string Message { get; }
+    private const string TYPE_TEXT = "UNEXPECTED_FAULT";
+    private const string TITLE_TEXT = "Unexpected Service Behavior";
+    private const string DETAIL_TEXT = "Hoppla, something unexpected happened. Please try again later.";
+    public int StatusCode => 500;
+    public string ContentType => "application/json";
 
-    public ErrorDetails(int statusCode, string message)
+    public UnexpectedDetail(string? instance)
     {
-        StatusCode = statusCode;
-        Message = message;
+        Type = TYPE_TEXT;
+        Title = TITLE_TEXT;
+        Detail = DETAIL_TEXT;
+        Instance = instance;
     }
-
-    public override string ToString()
-        => string.Format(ERRORDETAIL_RESPONSE, StatusCode, Message);
 }
