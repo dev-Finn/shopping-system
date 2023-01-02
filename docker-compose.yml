@@ -7,32 +7,66 @@ services:
     container_name: rabbit
     image: rabbitmq:3-management
     environment:
-      - RABBITMQ_DEFAULT_USER=developer
-      - RABBITMQ_DEFAULT_PASS=developer
+      RABBITMQ_DEFAULT_USER: developer
+      RABBITMQ_DEFAULT_PASS: developer
     ports:
       - "5672:5672"
       - "8090:15672"
 
-  postgres:
-    container_name: postgres
-    image: postgres
+  mongo:
+    container_name: mongo
+    image: mongo
+    restart: always
     environment:
-      - POSTGRES_PASSWORD=developmentpassword
-      - PGDATA=/var/lib/postgresql/data/pgdata
-    volumes:
-      - "postgres_data:/var/lib/postgresql/data"
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: developer
     ports:
-      - "5432:5432"
+      - "27017:27017"
+
+#  postgres:
+#    container_name: postgres
+#    image: postgres
+#    environment:
+#      - POSTGRES_PASSWORD=developmentpassword
+#      - PGDATA=/var/lib/postgresql/data/pgdata
+#    volumes:
+#      - "postgres_data:/var/lib/postgresql/data"
+#      - "./setup/postgres:/docker-entrypoint-initdb.d"
+#    ports:
+#      - "5432:5432"
+
+  jaeger:
+    container_name: jaeger
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "5775:5775/udp"
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+      - "5778:5778"
+      - "16686:16686"
+      - "14250:14250"
+      - "14268:14268"
+      - "14269:14269"
+      - "9411:9411"
 
   ordering-service:
-    container_name: ordering
-    image: shopping-system/ordering
+    container_name: ordering-service
+    image: shopping-system/ordering-service
     build:
       context: source
       dockerfile: Ordering/Ordering.Service/Dockerfile
     depends_on:
       - rabbit
-      - postgres
+      - mongo
+
+  ordering-api:
+    container_name: ordering-api
+    image: shopping-system/ordering-api
+    build:
+      context: source
+      dockerfile: Ordering/Ordering.Api/Dockerfile
+    depends_on:
+      - rabbit
     ports:
       - "8080:80"
       - "8443:443"
