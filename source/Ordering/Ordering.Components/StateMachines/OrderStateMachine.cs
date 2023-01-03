@@ -65,7 +65,7 @@ file static class OrderStateMachineBehaviorExtensions
     {
         return binder
             .Then(x => x.Saga.Items = x.Message.Items)
-            .Then(x => LogContext.Info?.Log("Order {0} with {1} Items submitted", x.Saga.CorrelationId, x.Saga.Items.Count()))
+            .Then(x => LogContext.Info?.Log("Order {0} with {1} Items submitted", x.Saga.CorrelationId, x.Saga.Items.Count))
             .Publish(c => new ReserveStock(c.Saga.CorrelationId, c.Saga.Items));
     }
 

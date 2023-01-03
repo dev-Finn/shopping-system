@@ -5,13 +5,18 @@ volumes:
 services:
   rabbit:
     container_name: rabbit
-    image: rabbitmq:3-management
+    image: masstransit/rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: developer
       RABBITMQ_DEFAULT_PASS: developer
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
     ports:
       - "5672:5672"
-      - "8090:15672"
+      - "15672:15672"
 
   mongo:
     container_name: mongo
@@ -22,18 +27,6 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: developer
     ports:
       - "27017:27017"
-
-#  postgres:
-#    container_name: postgres
-#    image: postgres
-#    environment:
-#      - POSTGRES_PASSWORD=developmentpassword
-#      - PGDATA=/var/lib/postgresql/data/pgdata
-#    volumes:
-#      - "postgres_data:/var/lib/postgresql/data"
-#      - "./setup/postgres:/docker-entrypoint-initdb.d"
-#    ports:
-#      - "5432:5432"
 
   jaeger:
     container_name: jaeger
@@ -56,8 +49,10 @@ services:
       context: source
       dockerfile: Ordering/Ordering.Service/Dockerfile
     depends_on:
-      - rabbit
-      - mongo
+      rabbit:
+        condition: service_healthy
+      mongo:
+        condition: service_started
 
   ordering-api:
     container_name: ordering-api
@@ -66,7 +61,8 @@ services:
       context: source
       dockerfile: Ordering/Ordering.Api/Dockerfile
     depends_on:
-      - rabbit
+      rabbit:
+        condition: service_healthy
     ports:
       - "8080:80"
       - "8443:443"
