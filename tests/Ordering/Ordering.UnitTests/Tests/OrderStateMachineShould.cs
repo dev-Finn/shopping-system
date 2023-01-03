@@ -2,7 +2,7 @@
 
 namespace Ordering.UnitTests.Tests;
 
-public sealed class OrderingStateMachineShould : OrderingStateMachineTestHarness
+public sealed class OrderStateMachineShould : OrderStateMachineTestHarness
 {
     [Test]
     public async Task Create_a_state_instance_when_OrderSubmitted_is_published()

@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace Ordering.UnitTests;
+namespace Shared.NUnit;
 
-public sealed class TestLogger : ILogger, IDisposable
+public sealed class TestLogger<T> : ILogger<T>, ILoggerProvider
 {
     public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
     {
@@ -21,5 +21,10 @@ public sealed class TestLogger : ILogger, IDisposable
 
     public void Dispose()
     {
+    }
+
+    public ILogger CreateLogger(string categoryName)
+    {
+        return this;
     }
 }
