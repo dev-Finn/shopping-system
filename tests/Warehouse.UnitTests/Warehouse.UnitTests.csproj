@@ -9,7 +9,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="MassTransit.TestFramework" Version="8.0.10" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
         <PackageReference Include="NUnit" Version="3.13.3" />
         <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
@@ -18,8 +17,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\source\Ordering\Ordering.Components\Ordering.Components.csproj" />
-      <ProjectReference Include="..\..\Shared.NUnit\Shared.NUnit.csproj" />
+      <ProjectReference Include="..\..\source\Warehouse\Warehouse.Components\Warehouse.Components.csproj" />
+      <ProjectReference Include="..\Shared.NUnit\Shared.NUnit.csproj" />
     </ItemGroup>
 
 </Project>
