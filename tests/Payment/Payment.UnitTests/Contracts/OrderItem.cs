@@ -2,4 +2,4 @@
 
 namespace Payment.UnitTests.Contracts;
 
-public sealed record OrderItem(Guid ProductId, decimal Price, decimal Amount) : IOrderItem;
+internal sealed record OrderItem(Guid ProductId, decimal Price, decimal Amount) : IOrderItem;
