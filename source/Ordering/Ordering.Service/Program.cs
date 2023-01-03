@@ -18,7 +18,7 @@ builder.Host.UseSerilog(logger);
 
 builder.Services
     .ConfigureOptions<RabbitMqTransportOptionsConfiguration>()
-    .AddOpenTelemetry("Ordering.Service")
+    .AddOpenTelemetryForService("Ordering.Service")
     .AddMassTransit(massTransit =>
     {
         massTransit.UsingRabbitMq((context, cfg) =>

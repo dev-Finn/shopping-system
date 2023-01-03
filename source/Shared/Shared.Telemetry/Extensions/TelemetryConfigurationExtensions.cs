@@ -16,7 +16,7 @@ public static class TelemetryConfigurationExtensions
     /// </summary>
     /// <param name="services"></param>
     /// <param name="serviceName">name for this service</param>
-    public static IServiceCollection AddOpenTelemetry(this IServiceCollection services, string serviceName)
+    public static IServiceCollection AddOpenTelemetryForService(this IServiceCollection services, string serviceName)
     {
         services.AddOpenTelemetry()
             .WithMetrics(builder =>

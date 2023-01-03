@@ -23,7 +23,7 @@ builder.Services
     .ConfigureOptions<RabbitMqTransportOptionsConfiguration>()
     .AddEndpointsApiExplorer()
     .AddSwaggerGen()
-    .AddOpenTelemetry("Ordering.Api")
+    .AddOpenTelemetryForService("Ordering.Api")
     .AddMassTransit(massTransit => massTransit.UsingRabbitMq());
 
 var app = builder.Build();
