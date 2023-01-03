@@ -8,7 +8,6 @@ public sealed class RabbitMqTransportOptionsConfiguration : IConfigureOptions<Ra
 {
     private readonly IConfiguration _configuration;
 
-
     public RabbitMqTransportOptionsConfiguration(IConfiguration configuration)
     {
         _configuration = configuration;

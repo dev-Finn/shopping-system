@@ -41,15 +41,25 @@ app.Run();
 
 static async Task SubmitOrder(HttpContext context, [FromBody] SubmitOrderRequest request)
 {
-    var bus = context.RequestServices.GetService<IBus>();
+    if (!request.Items.Any())
+    {
+        await Results.BadRequest().ExecuteAsync(context);
+    }
+
+    var bus = context.RequestServices.GetRequiredService<IBus>();
     await bus.Publish(new SubmitOrder(request.Items));
 }
 
 static async Task CancelOrder(HttpContext context, [FromRoute] Guid orderId)
 {
+    if (orderId == Guid.Empty)
+    {
+        await Results.BadRequest().ExecuteAsync(context);
+    }
+
     var bus = context.RequestServices.GetRequiredService<IRequestClient<CancelOrder>>();
     var response =  await bus.GetResponse<OrderCancelled, OrderNotFound>(new CancelOrder(orderId));
-    if (response.Is(out Response<OrderNotFound>? notfound))
+    if (response.Is(out Response<OrderNotFound>? _))
     {
         await Results.NotFound().ExecuteAsync(context);
     }
