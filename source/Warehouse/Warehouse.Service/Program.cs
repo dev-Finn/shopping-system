@@ -1,0 +1,34 @@
+using MassTransit;
+using Serilog;
+using Serilog.Core;
+using Shared.MassTransit.Options;
+using Shared.Telemetry.Extensions;
+using Warehouse.Components;
+
+Logger logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .Enrich.FromLogContext()
+    .CreateLogger();
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog(logger);
+
+builder.Services
+    .ConfigureOptions<RabbitMqTransportOptionsConfiguration>()
+    .AddOpenTelemetryForService("Warehouse.Service")
+    .AddMassTransit(massTransit =>
+    {
+        massTransit.UsingRabbitMq((context, cfg) =>
+        {
+            cfg.ConfigureEndpoints(context);
+        });
+
+        massTransit.AddActivities(typeof(ComponentsAssemblyMarker).Assembly);
+        massTransit.AddSagaStateMachines(typeof(ComponentsAssemblyMarker).Assembly);
+        massTransit.AddConsumers(typeof(ComponentsAssemblyMarker).Assembly);
+    });
+
+var app = builder.Build();
+
+app.Run();

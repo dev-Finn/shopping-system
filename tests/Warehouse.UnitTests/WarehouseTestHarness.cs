@@ -1,10 +1,10 @@
 ﻿using MassTransit;
-using Payment.Components;
 using Shared.NUnit;
+using Warehouse.Components;
 
-namespace Payment.UnitTests;
+namespace Warehouse.UnitTests;
 
-public abstract class PaymentTestHarness : MassTransitTestHarness
+public abstract class WarehouseTestHarness : MassTransitTestHarness
 {
     protected override void ConfigureTestHarness(IBusRegistrationConfigurator configurator)
     {

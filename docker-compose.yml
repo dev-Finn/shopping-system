@@ -67,6 +67,16 @@ services:
       - "8080:80"
       - "8443:443"
 
+  warehouse-service:
+    container_name: warehouse-service
+    image: shopping-system/warehouse-service
+    build:
+      context: source
+      dockerfile: Warehouse/Warehouse.Service/Dockerfile
+    depends_on:
+      rabbit:
+        condition: service_healthy
+
   payment-service:
     container_name: payment-service
     image: shopping-system/payment-service
