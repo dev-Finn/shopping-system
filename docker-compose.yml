@@ -66,3 +66,13 @@ services:
     ports:
       - "8080:80"
       - "8443:443"
+
+  payment-service:
+    container_name: payment-service
+    image: shopping-system/payment-service
+    build:
+      context: source
+      dockerfile: Payment/Payment.Service/Dockerfile
+    depends_on:
+      rabbit:
+        condition: service_healthy
