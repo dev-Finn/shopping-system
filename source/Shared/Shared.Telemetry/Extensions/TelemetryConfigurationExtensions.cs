@@ -7,7 +7,7 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
-namespace Ordering.Components.Extensions;
+namespace Shared.Telemetry.Extensions;
 
 public static class TelemetryConfigurationExtensions
 {

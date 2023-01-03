@@ -9,6 +9,7 @@ WORKDIR /src
 # Copy Source
 COPY ["Ordering/Ordering.Api/", "Ordering/Ordering.Api/"]
 COPY ["Ordering/Ordering.Components/", "Ordering/Ordering.Components/"]
+COPY ["Shared/", "Shared/"]
 
 # Copy Contracts
 COPY ["Ordering/Ordering.Contracts/", "Ordering/Ordering.Contracts/"]

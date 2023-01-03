@@ -2,10 +2,10 @@ using MassTransit;
 using MongoDB.Driver;
 using MongoDB.Driver.Core.Extensions.DiagnosticSources;
 using Ordering.Components;
-using Ordering.Components.Extensions;
-using Ordering.Components.Options;
 using Serilog;
 using Serilog.Core;
+using Shared.MassTransit.Options;
+using Shared.Telemetry.Extensions;
 
 Logger logger = new LoggerConfiguration()
     .WriteTo.Console()

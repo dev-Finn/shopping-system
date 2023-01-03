@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
-namespace Ordering.Components.Options;
+namespace Shared.MassTransit.Options;
 
 public sealed class RabbitMqTransportOptionsConfiguration : IConfigureOptions<RabbitMqTransportOptions>
 {

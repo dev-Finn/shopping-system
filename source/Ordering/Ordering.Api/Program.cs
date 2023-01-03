@@ -1,13 +1,14 @@
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
-using Ordering.Components.Extensions;
-using Ordering.Components.Options;
+using Ordering.Api;
 using Ordering.Contracts.Commands;
 using Ordering.Contracts.Events;
 using Ordering.Contracts.Models;
 using Ordering.Contracts.Responses;
 using Serilog;
 using Serilog.Core;
+using Shared.MassTransit.Options;
+using Shared.Telemetry.Extensions;
 
 Logger logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -46,12 +47,15 @@ static async Task SubmitOrder(HttpContext context, [FromBody] SubmitOrderRequest
 
 static async Task CancelOrder(HttpContext context, [FromRoute] Guid orderId)
 {
-    var bus = context.RequestServices.GetService<IRequestClient<CancelOrder>>();
+    var bus = context.RequestServices.GetRequiredService<IRequestClient<CancelOrder>>();
     var response =  await bus.GetResponse<OrderCancelled, OrderNotFound>(new CancelOrder(orderId));
-    if (response.Is(out Response<OrderNotFound> notfound))
+    if (response.Is(out Response<OrderNotFound>? notfound))
     {
         await Results.NotFound().ExecuteAsync(context);
     }
 }
 
-public sealed record SubmitOrderRequest(OrderItem[] Items);
+namespace Ordering.Api
+{
+    public sealed record SubmitOrderRequest(OrderItem[] Items);
+}
