@@ -19,7 +19,6 @@ builder.Host.UseSerilog(logger);
 builder.Services
     .ConfigureOptions<RabbitMqTransportOptionsConfiguration>()
     .AddOpenTelemetry("Ordering.Service")
-    // .AddSingleton<BsonClassMap<OrderState>, OrderStateClassMap>()
     .AddMassTransit(massTransit =>
     {
         massTransit.UsingRabbitMq((context, cfg) =>

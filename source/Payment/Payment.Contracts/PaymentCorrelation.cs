@@ -9,6 +9,10 @@ public static class PaymentCorrelation
     [ModuleInitializer]
     public static void Initialize()
     {
+        LogContext.Info?.Log("Initializing Payment Message Correlation...");
+
         MessageCorrelation.UseCorrelationId<PaymentProcessed>(x => x.OrderId);
+
+        LogContext.Info?.Log("Payment Message Correlation Initialized!");
     }
 }

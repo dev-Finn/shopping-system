@@ -33,6 +33,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{A5B43F97-5373-4059-89F0-24CDCC545C35}"
 	ProjectSection(SolutionItems) = preProject
 		docs\Command and Event Ownership.png = docs\Command and Event Ownership.png
+		docs\Contract Rules.txt = docs\Contract Rules.txt
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ordering.Api", "source\Ordering\Ordering.Api\Ordering.Api.csproj", "{5D905E5A-8353-4346-8796-8D2B0FE560D0}"

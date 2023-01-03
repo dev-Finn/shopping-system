@@ -4,4 +4,4 @@ using Ordering.Contracts.Models;
 namespace Ordering.Contracts.Events;
 
 [EntityName("order-submitted")]
-public sealed record OrderSubmitted(Guid OrderId, IReadOnlyCollection<OrderItem> Items);
+public sealed record OrderSubmitted(Guid OrderId, IReadOnlyCollection<IOrderItem> Items);

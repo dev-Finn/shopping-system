@@ -12,7 +12,7 @@ public sealed class OrderState : SagaStateMachineInstance, ISagaVersion
 {
     public Guid CorrelationId { get; set; }
     public string CurrentState { get; set; }
-    public IReadOnlyCollection<OrderItem> Items { get; set; }
+    public IReadOnlyCollection<IOrderItem> Items { get; set; }
 
     public int Version { get; set; }
 }

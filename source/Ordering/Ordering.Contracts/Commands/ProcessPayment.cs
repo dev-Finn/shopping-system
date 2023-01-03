@@ -4,4 +4,4 @@ using Ordering.Contracts.Models;
 namespace Ordering.Contracts.Commands;
 
 [EntityName("process-payment")]
-public sealed record ProcessPayment(Guid OrderId, IEnumerable<OrderItem> Items);
+public sealed record ProcessPayment(Guid OrderId, IReadOnlyCollection<IOrderItem> Items);

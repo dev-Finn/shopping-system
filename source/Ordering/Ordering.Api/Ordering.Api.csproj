@@ -26,7 +26,6 @@
     <ItemGroup>
         <ProjectReference Include="..\..\Shared\Shared.MassTransit\Shared.MassTransit.csproj" />
         <ProjectReference Include="..\..\Shared\Shared.Telemetry\Shared.Telemetry.csproj" />
-        <ProjectReference Include="..\Ordering.Components\Ordering.Components.csproj" />
         <ProjectReference Include="..\Ordering.Contracts\Ordering.Contracts.csproj" />
     </ItemGroup>
 

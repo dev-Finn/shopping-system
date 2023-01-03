@@ -57,5 +57,6 @@ static async Task CancelOrder(HttpContext context, [FromRoute] Guid orderId)
 
 namespace Ordering.Api
 {
+    public sealed record OrderItem(Guid ProductId, decimal Price, decimal Amount) : IOrderItem;
     public sealed record SubmitOrderRequest(OrderItem[] Items);
 }
