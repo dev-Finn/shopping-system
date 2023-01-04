@@ -6,7 +6,7 @@ namespace Ordering.UnitTests;
 
 public abstract class OrderingTestHarness : MassTransitTestHarness
 {
-    protected override void ConfigureTestHarness(IBusRegistrationConfigurator configurator)
+    protected override void ConfigureMassTransit(IBusRegistrationConfigurator configurator)
     {
         configurator.AddConsumers(typeof(ComponentsAssemblyMarker).Assembly);
         configurator.AddActivities(typeof(ComponentsAssemblyMarker).Assembly);

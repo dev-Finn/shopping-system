@@ -48,8 +48,8 @@ public sealed class OrderStateMachine : MassTransitStateMachine<OrderState>
 
         During(Reserved,
             When(PaymentProcessed)
-                .TransitionTo(Paid)
                 .Unschedule(ReservationTimeout)
+                .TransitionTo(Paid)
                 .ShipOrder());
 
         During(Reserved, When(ReservationTimeout.Received)

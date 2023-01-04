@@ -12,7 +12,7 @@ public abstract class StateMachineTestHarness<TMachine, TState> : MassTransitTes
         SagaHarness = TestHarness.GetSagaStateMachineHarness<TMachine, TState>();
     }
 
-    protected override void ConfigureTestHarness(IBusRegistrationConfigurator configurator)
+    protected override void ConfigureMassTransit(IBusRegistrationConfigurator configurator)
     {
         configurator.AddSagaStateMachine<TMachine, TState>();
     }

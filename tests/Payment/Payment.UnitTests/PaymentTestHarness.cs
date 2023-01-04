@@ -6,7 +6,7 @@ namespace Payment.UnitTests;
 
 public abstract class PaymentTestHarness : MassTransitTestHarness
 {
-    protected override void ConfigureTestHarness(IBusRegistrationConfigurator configurator)
+    protected override void ConfigureMassTransit(IBusRegistrationConfigurator configurator)
     {
         configurator.AddConsumers(typeof(ComponentsAssemblyMarker).Assembly);
         configurator.AddActivities(typeof(ComponentsAssemblyMarker).Assembly);
