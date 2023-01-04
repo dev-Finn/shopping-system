@@ -24,7 +24,6 @@ public static class OrderingCorrelation
         MessageCorrelation.UseCorrelationId<OrderProcessed>(x => x.OrderId);
 
         MessageCorrelation.UseCorrelationId<OrderNotFound>(x => x.OrderId);
-
         LogContext.Info?.Log("Ordering Message Correlation Initialized!");
     }
 }

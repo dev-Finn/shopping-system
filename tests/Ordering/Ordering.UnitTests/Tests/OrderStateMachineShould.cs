@@ -5,7 +5,7 @@ namespace Ordering.UnitTests.Tests;
 public sealed class OrderStateMachineShould : OrderStateMachineTestHarness
 {
     [Test]
-    public async Task Create_a_state_instance_when_OrderSubmitted_is_published()
+    public async Task Create_State_Instance_when_OrderSubmitted_is_published()
     {
         var validEvent = TestData.GetValidOrderSubmittedEvent();
         await TestHarness.Bus.Publish(validEvent);
@@ -13,7 +13,7 @@ public sealed class OrderStateMachineShould : OrderStateMachineTestHarness
     }
 
     [Test]
-    public async Task Publish_an_ReserveStock_Command_when_OrderSubmitted_is_processed()
+    public async Task Publish_ReserveStock_when_OrderSubmitted_is_processed()
     {
         var validEvent = TestData.GetValidOrderSubmittedEvent();
         await TestHarness.Bus.Publish(validEvent);

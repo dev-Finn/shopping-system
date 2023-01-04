@@ -1,22 +1,22 @@
-﻿using Ordering.Contracts.Commands;
+﻿using Ordering.Components.Consumers;
+using Ordering.Contracts.Commands;
 using Ordering.Contracts.Events;
-using Ordering.UnitTests.Contracts;
 
 namespace Ordering.UnitTests.Tests;
 
-public sealed class ProcessPaymentConsumerShould : OrderingTestHarness
+public sealed class SubmitOrderHandlerShould : OrderingTestHarness
 {
     [Test]
     public async Task Consume_SubmitOrder_Command()
     {
-        await TestHarness.Bus.Publish(new SubmitOrder(new[] { new OrderItem(Guid.NewGuid(), 15, 10) }));
-        Assert.That(await TestHarness.Consumed.Any<SubmitOrder>(), Is.True);
+        await TestHarness.Bus.Publish(TestData.GetValidSubmitOrderCommand());
+        Assert.That(await TestHarness.GetConsumerHarness<SubmitOrderHandler>().Consumed.Any<SubmitOrder>(), Is.True);
     }
 
     [Test]
-    public async Task Publishes_OrderSubmitted_Event()
+    public async Task Publish_OrderSubmitted_Event()
     {
-        await TestHarness.Bus.Publish(new SubmitOrder(new[] { new OrderItem(Guid.NewGuid(), 15, 10) }));
+        await TestHarness.Bus.Publish(TestData.GetValidSubmitOrderCommand());
         Assert.That(await TestHarness.Published.Any<OrderSubmitted>(), Is.True);
     }
 }

@@ -12,8 +12,8 @@ public abstract class StateMachineTestHarness<TMachine, TState> : MassTransitTes
         SagaHarness = TestHarness.GetSagaStateMachineHarness<TMachine, TState>();
     }
 
-    protected override void ConfigureTestHarness(IBusRegistrationConfigurator busRegistrationConfigurator)
+    protected override void ConfigureTestHarness(IBusRegistrationConfigurator configurator)
     {
-        busRegistrationConfigurator.AddSagaStateMachine<TMachine, TState>();
+        configurator.AddSagaStateMachine<TMachine, TState>();
     }
 }

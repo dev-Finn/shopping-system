@@ -1,0 +1,12 @@
+﻿{
+	"stryker-config": {
+		"project": "Ordering.Components.csproj",
+		"ignore-methods": [
+			"*Log",
+			"Log*",
+			"Console.Write*",
+			"*Exception.ctor"
+		],
+		"mutate": ["!**/*Correlation.cs"]
+	}
+}

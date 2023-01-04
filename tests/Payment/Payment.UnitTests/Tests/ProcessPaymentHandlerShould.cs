@@ -1,11 +1,10 @@
 ﻿using MassTransit;
 using Ordering.Contracts.Commands;
 using Payment.Contracts.Events;
-using Payment.UnitTests.Contracts;
 
 namespace Payment.UnitTests.Tests;
 
-public sealed class ProcessPaymentConsumerShould : PaymentTestHarness
+public sealed class ProcessPaymentHandlerShould : PaymentTestHarness
 {
     [Test]
     public async Task Consume_ProcessPayment_Command()
@@ -15,7 +14,7 @@ public sealed class ProcessPaymentConsumerShould : PaymentTestHarness
     }
 
     [Test]
-    public async Task Publishes_PaymentProcessed_Event()
+    public async Task Publish_PaymentProcessed_Event()
     {
         await TestHarness.Bus.Publish(new ProcessPayment(NewId.NextGuid(), TestData.GetValidOrderItems(5)));
         Assert.That(await TestHarness.Published.Any<PaymentProcessed>(), Is.True);

@@ -21,8 +21,10 @@ builder.Services
     .AddOpenTelemetryForService("Ordering.Service")
     .AddMassTransit(massTransit =>
     {
+        massTransit.AddDelayedMessageScheduler();
         massTransit.UsingRabbitMq((context, cfg) =>
         {
+            cfg.UseDelayedMessageScheduler();
             cfg.ConfigureEndpoints(context);
         });
 

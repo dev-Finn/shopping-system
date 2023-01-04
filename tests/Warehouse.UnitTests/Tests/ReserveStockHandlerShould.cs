@@ -1,7 +1,6 @@
 ﻿using MassTransit;
 using Ordering.Contracts.Commands;
 using Warehouse.Contracts.Events;
-using Warehouse.UnitTests.Contracts;
 
 namespace Warehouse.UnitTests.Tests;
 
@@ -15,7 +14,7 @@ public sealed class ReserveStockHandlerShould : WarehouseTestHarness
     }
 
     [Test]
-    public async Task Publishes_StockReserved_Event()
+    public async Task Publish_StockReserved_Event()
     {
         await TestHarness.Bus.Publish(new ReserveStock(NewId.NextGuid(), TestData.GetValidOrderItems(5)));
         Assert.That(await TestHarness.Published.Any<StockReserved>(), Is.True);

@@ -15,7 +15,10 @@ public sealed class OrderState : SagaStateMachineInstance, ISagaVersion
     public IReadOnlyCollection<IOrderItem> Items { get; set; }
 
     public int Version { get; set; }
+    public Guid? ReservationTimeoutTokenId { get; set; }
 }
+
+public sealed record OrderReservationTimeoutExpired(Guid OrderId);
 
 public sealed class OrderStateMachine : MassTransitStateMachine<OrderState>
 {
@@ -26,26 +29,36 @@ public sealed class OrderStateMachine : MassTransitStateMachine<OrderState>
         Event(() => OrderCancellationRequested, e =>
         {
             e.OnMissingInstance(m =>
-                m.ExecuteAsync(x =>
-                {
-                    LogContext.Info?.Log("Order with Id {0} not found", x.Message.OrderId);
-                    return x.RespondAsync(new OrderNotFound(x.Message.OrderId));
-                }));
+                m.ExecuteAsync(x => x.RespondAsync(new OrderNotFound(x.Message.OrderId))));
         });
 
-        Initially(
-            When(OrderSubmitted)
-                .InitializeState()
-                .ReserveStock()
-                .TransitionTo(Processing));
+        Schedule(() => ReservationTimeout, instance => instance.ReservationTimeoutTokenId, s =>
+        {
+            s.Delay = TimeSpan.FromDays(6);
+            s.Received = r => r.CorrelateById(context => context.Message.OrderId);
+        });
 
-        During(Processing,
-            When(StockReserved).InitiatePaymentProcessing(),
-            When(PaymentProcessed).ShipOrder(),
-            When(OrderShipped).CompleteOrder().TransitionTo(Shipped));
+        Initially(When(OrderSubmitted).InitializeState().TransitionTo(Submitted).ReserveStock());
 
-        During(Processing,
-            When(OrderCancellationRequested).CancelOrder().TransitionTo(Cancelled));
+        During(Submitted,
+            When(StockReserved)
+                .TransitionTo(Reserved)
+                .Schedule(ReservationTimeout, context => new OrderReservationTimeoutExpired(context.Saga.CorrelationId))
+                .InitiatePaymentProcessing());
+
+        During(Reserved,
+            When(PaymentProcessed)
+                .TransitionTo(Paid)
+                .Unschedule(ReservationTimeout)
+                .ShipOrder());
+
+        During(Reserved, When(ReservationTimeout.Received)
+            .CancelOrder()
+            .TransitionTo(ReservationTimedOut).Finalize());
+
+        During(Paid, When(OrderShipped).TransitionTo(Shipped).CompleteOrder().Finalize());
+
+        DuringAny(When(OrderCancellationRequested).CancelOrder().TransitionTo(Cancelled).Finalize());
     }
 
     public Event<OrderSubmitted> OrderSubmitted { get; }
@@ -54,7 +67,12 @@ public sealed class OrderStateMachine : MassTransitStateMachine<OrderState>
     public Event<PaymentProcessed> PaymentProcessed { get; }
     public Event<OrderShipped> OrderShipped { get; }
 
-    public State Processing { get; }
+    public Schedule<OrderState, OrderReservationTimeoutExpired> ReservationTimeout { get; }
+
+    public State Submitted { get; }
+    public State Reserved { get; }
+    public State ReservationTimedOut { get; }
+    public State Paid { get; }
     public State Shipped { get; }
     public State Cancelled { get; }
 }
@@ -66,6 +84,7 @@ file static class OrderStateMachineBehaviorExtensions
         binder
             .Then(x => x.Saga.Items = x.Message.Items)
             .Then(x => LogContext.Info?.Log("Order {0} with {1} Items submitted", x.Saga.CorrelationId, x.Saga.Items.Count));
+
     public static EventActivityBinder<OrderState, OrderSubmitted> ReserveStock(
         this EventActivityBinder<OrderState, OrderSubmitted> binder) =>
         binder
@@ -93,5 +112,11 @@ file static class OrderStateMachineBehaviorExtensions
         this EventActivityBinder<OrderState, CancelOrder> binder) =>
         binder
             .Then(x => LogContext.Info?.Log("Order {0} was cancelled", x.Saga.CorrelationId))
+            .Publish(c => new OrderCancelled(c.Saga.CorrelationId));
+
+    public static EventActivityBinder<OrderState, OrderReservationTimeoutExpired> CancelOrder(
+        this EventActivityBinder<OrderState, OrderReservationTimeoutExpired> binder) =>
+        binder
+            .Then(x => LogContext.Info?.Log("Order {0} was cancelled due to the reservation timing out", x.Saga.CorrelationId))
             .Publish(c => new OrderCancelled(c.Saga.CorrelationId));
 }

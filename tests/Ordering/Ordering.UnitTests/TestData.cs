@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using Ordering.Contracts.Commands;
 using Ordering.Contracts.Events;
 using Ordering.Contracts.Models;
 using Ordering.UnitTests.Contracts;
@@ -18,5 +19,10 @@ public static class TestData
             Guid.NewGuid(),
             Random.Shared.Next(150),
             Random.Shared.Next(150))).ToList();
+    }
+
+    public static SubmitOrder GetValidSubmitOrderCommand()
+    {
+        return new SubmitOrder(GetValidOrderItems(Random.Shared.Next(10)));
     }
 }
