@@ -8,14 +8,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
-        <PackageReference Include="MassTransit.MongoDb" Version="8.0.10" />
-        <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.10" />
-        <PackageReference Include="MongoDB.Driver.Core.Extensions.DiagnosticSources" Version="1.3.0" />
-        <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Content Include="..\..\..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
@@ -27,7 +19,13 @@
     <ItemGroup>
       <ProjectReference Include="..\..\Shared\Shared.MassTransit\Shared.MassTransit.csproj" />
       <ProjectReference Include="..\..\Shared\Shared.Telemetry\Shared.Telemetry.csproj" />
-      <ProjectReference Include="..\Ordering.Components\Ordering.Components.csproj" />
+      <ProjectReference Include="..\Warehouse.Components\Warehouse.Components.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
+      <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.10" />
+      <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
     </ItemGroup>
 
 </Project>

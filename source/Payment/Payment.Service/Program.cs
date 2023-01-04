@@ -1,7 +1,5 @@
 using MassTransit;
-using MongoDB.Driver;
-using MongoDB.Driver.Core.Extensions.DiagnosticSources;
-using Ordering.Components;
+using Payment.Components;
 using Serilog;
 using Serilog.Core;
 using Shared.MassTransit.Options;
@@ -18,28 +16,17 @@ builder.Host.UseSerilog(logger);
 
 builder.Services
     .ConfigureOptions<RabbitMqTransportOptionsConfiguration>()
-    .AddOpenTelemetryForService("Ordering.Service")
+    .AddOpenTelemetryForService("Payment.Service")
     .AddMassTransit(massTransit =>
     {
-        massTransit.AddDelayedMessageScheduler();
         massTransit.UsingRabbitMq((context, cfg) =>
         {
-            cfg.UseDelayedMessageScheduler();
             cfg.ConfigureEndpoints(context);
         });
 
         massTransit.AddActivities(typeof(ComponentsAssemblyMarker).Assembly);
         massTransit.AddSagaStateMachines(typeof(ComponentsAssemblyMarker).Assembly);
         massTransit.AddConsumers(typeof(ComponentsAssemblyMarker).Assembly);
-
-        massTransit.SetMongoDbSagaRepositoryProvider(conf =>
-        {
-            var clientSettings = MongoClientSettings.FromConnectionString("mongodb://root:developer@mongo");
-            clientSettings.ClusterConfigurator = cb => cb.Subscribe(new DiagnosticsActivityEventSubscriber());
-            conf.Connection = "mongodb://root:developer@mongo";
-            conf.DatabaseName = "orderingdb";
-            conf.ClientFactory(p => new MongoClient(clientSettings));
-        });
     });
 
 var app = builder.Build();

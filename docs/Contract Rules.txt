@@ -1,0 +1,7 @@
+﻿
+1.) Use IReadonlyXXX for enumerable properties. Prefer IReadonlyCollection over IReadonlyList
+
+ex = IEnumerable => IReadonlyCollection
+ex = Hashset => IReadonlySet
+
+2.) Use Interfaces for Contract Models
